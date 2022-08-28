@@ -3,7 +3,13 @@
 Expandable menu is an expandable menu with infinite horizontal item list with high customizable ability.
 
 ### Preview
-<img src="" width="32%">
+<img src="https://user-images.githubusercontent.com/32927238/187061783-8cf2d8d1-aea6-46e9-aac7-ec920d0beb6d.png" width="32%">
+
+<video controls autoplay>
+  <source src="https://user-images.githubusercontent.com/32927238/187061847-8588a879-836d-48cc-8854-03119bc16a89.mp4" type="video/mp4">
+</video>
+
+
 
 
 | Property | Description |
