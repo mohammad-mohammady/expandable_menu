@@ -1,6 +1,6 @@
 name: expandable_menu
 description: Expandable menu is an expandable menu with infinite horizontal item list with high customizable ability.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/mohammad-mohammady/expandable_menu
 
 environment:
