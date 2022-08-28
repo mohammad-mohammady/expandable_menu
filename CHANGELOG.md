@@ -13,3 +13,7 @@
 ## [0.0.4] - 28 August 2022.
 
 * Remove unused imports.
+
+## [0.0.5] - 28 August 2022.
+
+* Format codes.

@@ -35,14 +35,19 @@ class _ExpandableIconState extends State<ExpandableIcon>
     with TickerProviderStateMixin {
   /// This private property declare hamburger animation progress value.
   double _hamburgerProgress = 0.0;
+
   /// This private property declare hamburger animation.
   late Animation<double> _hamburgerAnimation;
+
   /// This private property declare hamburger controller.
   late AnimationController _hamburgerAnimationController;
+
   /// This private property declare arrow animation progress value.
   double _arrowProgress = 0.0;
+
   /// This private property declare arrow animation.
   late Animation<double> _arrowAnimation;
+
   /// This private property declare arrow controller.
   late AnimationController _arrowAnimationController;
 

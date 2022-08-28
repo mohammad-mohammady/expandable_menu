@@ -8,7 +8,6 @@ import 'expandable_icon.dart';
 
 /// This class is main class of [ExpandableMenu] widget.
 class ExpandableMenu extends StatefulWidget {
-
   /// This property declare width of widget when
   /// it's not expanded in initial state.
   final double width;
@@ -47,7 +46,6 @@ class ExpandableMenu extends StatefulWidget {
 
 class _ExpandableMenuState extends State<ExpandableMenu>
     with TickerProviderStateMixin {
-
   /// This private property declare to width of widget.
   late double _width;
 
@@ -173,7 +171,6 @@ class _ExpandableMenuState extends State<ExpandableMenu>
     );
   }
 
-
   /// This method invoke when clicked on arrow icon or hamburger icon.
   /// In [onExpandableIconClicked] method container animation will run.
   void onExpandableIconClicked() {
@@ -182,8 +179,7 @@ class _ExpandableMenuState extends State<ExpandableMenu>
       if (_isExpanded) {
         _containerAnimationController.forward();
         if (_listWidget.isEmpty) {
-          Timer.periodic(const Duration(milliseconds: 60),
-              (timer) {
+          Timer.periodic(const Duration(milliseconds: 60), (timer) {
             _listTimer = timer;
             final allWidgets = widget.items;
             if (_listWidget.length < allWidgets.length) {
