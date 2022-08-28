@@ -3,9 +3,9 @@
 Expandable menu is an expandable menu with infinite horizontal item list with high customizable ability.
 
 ### Preview
-<img src="https://user-images.githubusercontent.com/32927238/187061783-8cf2d8d1-aea6-46e9-aac7-ec920d0beb6d.png" width="32%">
-
-<img src="https://user-images.githubusercontent.com/32927238/187061970-0d3241bd-60b4-4b4a-8810-69fc30d60958.gif" width="32%">
+<img src="https://user-images.githubusercontent.com/32927238/187061783-8cf2d8d1-aea6-46e9-aac7-ec920d0beb6d.png" width="32%" height="422px">
+<br>
+<img src="https://user-images.githubusercontent.com/32927238/187061970-0d3241bd-60b4-4b4a-8810-69fc30d60958.gif" width="32%" height="422px">
 
 
 
