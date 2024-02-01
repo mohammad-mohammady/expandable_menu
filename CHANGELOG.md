@@ -17,3 +17,7 @@
 ## [0.0.5] - 28 August 2022.
 
 * Format codes.
+
+## [0.0.6] - 01 February 2024.
+
+* Added controller and animationspeed variable

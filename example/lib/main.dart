@@ -31,8 +31,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late ExpandableMenuController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = ExpandableMenuController();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var test = Directionality.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFF9FB373),
       body: ListView(
@@ -56,6 +66,28 @@ class _MyHomePageState extends State<MyHomePage> {
                         Radius.circular(16.0),
                       ),
                     ),
+                    child:
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        TextButton(
+                            onPressed: () {
+                              controller.open();
+                            },
+                            child: const Text("Open menu")),
+                        TextButton(
+                            onPressed: () {
+                              controller.close();
+                            },
+                            child: const Text("Close menu")),
+
+                        TextButton(
+                            onPressed: () {
+                              controller.toggle();
+                            },
+                            child: const Text("Toggle menu")),
+                      ],
+                    ),
                   ),
                 ),
                 Positioned(
@@ -65,21 +97,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ExpandableMenu(
                       width: 46.0,
                       height: 46.0,
+                      controller: controller,
                       items: [
                         Container(),
                         Container(),
-                        Container(),
-                        Container(),
-                        Container(),
-                        Container(),
-                        Container(),
-                        Container(),
+                        RawMaterialButton(
+                          onPressed: () {
+                            controller.close();
+                          },
+                          shape: const CircleBorder(),
+                          child: const Icon(
+                            Icons.arrow_right_alt,
+                          ),
+                        ),
                         Container(),
                         Container(),
                         Container(),
                         Container(),
                       ],
                     )),
+
               ],
             ),
           )),

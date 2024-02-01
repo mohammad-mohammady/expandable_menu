@@ -19,19 +19,27 @@ class ExpandableIcon extends StatefulWidget {
   /// This property is color of icon(Hamburger icon and arrow icon).
   final Color iconColor;
 
+  /// This property makes it possible to controll the [ExpandableIcon]
+  final ExpandableIconController? controller;
+
+  /// This property sets the main animationspeed
+  final int animationSpeed;
+
   const ExpandableIcon({
-    Key? key,
+    super.key,
     required this.onClicked,
     required this.width,
     required this.height,
     required this.iconColor,
-  }) : super(key: key);
+    this.animationSpeed = 500,
+    this.controller,
+  });
 
   @override
-  State<ExpandableIcon> createState() => _ExpandableIconState();
+  State<ExpandableIcon> createState() => ExpandableIconState();
 }
 
-class _ExpandableIconState extends State<ExpandableIcon>
+class ExpandableIconState extends State<ExpandableIcon>
     with TickerProviderStateMixin {
   /// This private property declare hamburger animation progress value.
   double _hamburgerProgress = 0.0;
@@ -66,15 +74,23 @@ class _ExpandableIconState extends State<ExpandableIcon>
   late double iconHeight;
 
   /// This controller changes icon state.
-  final _expandableIconController = ExpandableIconController();
+  late final ExpandableIconController _expandableIconController;
 
   @override
   void initState() {
+    //Use external controller if set
+    if (widget.controller != null) {
+      _expandableIconController = widget.controller!;
+    } else {
+      _expandableIconController = ExpandableIconController();
+    }
+    _expandableIconController.setControllerState(this);
+
     iconWidth = widget.width * 0.7;
     iconHeight = widget.height * 0.7;
 
     _hamburgerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: Duration(milliseconds: (widget.animationSpeed * 0.4).toInt()),
       vsync: this,
     );
 
@@ -91,7 +107,7 @@ class _ExpandableIconState extends State<ExpandableIcon>
       });
 
     _arrowAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 250),
+      duration: Duration(milliseconds: (widget.animationSpeed * 0.2).toInt()),
       vsync: this,
     );
 
@@ -106,7 +122,8 @@ class _ExpandableIconState extends State<ExpandableIcon>
 
     _expandableIconController.addListener(() {
       if (_expandableIconController.isExpanded) {
-        Future.delayed(const Duration(milliseconds: 400), () {
+        Future.delayed(
+            Duration(milliseconds: (widget.animationSpeed * 0.4).toInt()), () {
           _arrowAnimationController.forward();
         });
       } else {
@@ -137,22 +154,7 @@ class _ExpandableIconState extends State<ExpandableIcon>
             splashColor: Colors.black.withOpacity(.2),
             borderRadius: BorderRadius.all(Radius.circular(widget.width)),
             onTap: () {
-              if (!_isAnimating) {
-                if (_hamburgerAnimationController.isCompleted) {
-                  _animationLocker();
-                  _expandableIconController.setExpandStatus();
-                  widget.onClicked();
-                  Future.delayed(const Duration(milliseconds: 800), () {
-                    _hamburgerAnimationController.reverse();
-                  });
-                } else {
-                  _animationLocker();
-                  _hamburgerAnimationController.forward();
-                  Future.delayed(const Duration(milliseconds: 250), () {
-                    widget.onClicked();
-                  });
-                }
-              }
+              onClickInternal();
             },
             child: CustomPaint(
               size: Size(iconWidth, iconHeight),
@@ -170,11 +172,35 @@ class _ExpandableIconState extends State<ExpandableIcon>
     );
   }
 
+  void onClickInternal() {
+    if (!_isAnimating) {
+      if (_hamburgerAnimationController.isCompleted) {
+        _animationLocker();
+        _expandableIconController.setExpandStatus();
+        widget.onClicked();
+        Future.delayed(
+            Duration(milliseconds: (widget.animationSpeed * 0.4).toInt()), () {
+          _hamburgerAnimationController.reverse();
+        });
+      } else {
+        _animationLocker();
+        _hamburgerAnimationController.forward();
+        Future.delayed(
+            Duration(milliseconds: (widget.animationSpeed * 0.4).toInt()), () {
+          widget.onClicked();
+        });
+      }
+    }
+  }
+
   /// This method will lock clickable of button
   /// to ensure all animations finished.
   void _animationLocker() {
     _isAnimating = true;
-    Future.delayed(const Duration(milliseconds: 800 + 250 + 250), () {
+    Future.delayed(
+        Duration(
+            milliseconds: (widget.animationSpeed * 0.4).toInt() +
+                (widget.animationSpeed * 0.25).toInt() * 2), () {
       _isAnimating = false;
     });
   }
@@ -230,7 +256,7 @@ class MyPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter old) {
+  bool shouldRepaint(CustomPainter oldDelegate) {
     return true;
   }
 }
@@ -238,10 +264,20 @@ class MyPainter extends CustomPainter {
 /// This class is controller for control expand icon.
 class ExpandableIconController extends ChangeNotifier {
   bool isExpanded = false;
+  ExpandableIconState? state;
+
+  void setControllerState(ExpandableIconState state) {
+    this.state = state;
+  }
 
   /// This method will change expand status.
   void setExpandStatus() {
     isExpanded = !isExpanded;
     notifyListeners();
+  }
+
+  /// This metod is the same as a toggle
+  void toggle() {
+    state?.onClickInternal();
   }
 }

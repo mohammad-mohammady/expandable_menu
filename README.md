@@ -9,14 +9,16 @@ Expandable menu is an expandable menu with infinite horizontal item list with hi
 
 
 
-| Property | Description |
-| --- | --- |
-| `width` | This property declare width of widget when it's not expanded in initial state |
-| `height` | This property declare height of widget |
-| `items` | This property will contains items in list of menu |
-| `backgroundColor` | This property declare background color of widget and default value is [Color(0xFF4B5042)] |
-| `iconColor` | This property declare icon color of both icon(Arrow icon and Hamburger icon) |
+| Property             | Description                                                                                                     |
+|----------------------|-----------------------------------------------------------------------------------------------------------------|
+| `width`              | This property declare width of widget when it's not expanded in initial state                                   |
+| `height`             | This property declare height of widget                                                                          |
+| `items`              | This property will contains items in list of menu                                                               |
+| `backgroundColor`    | This property declare background color of widget and default value is [Color(0xFF4B5042)]                       |
+| `iconColor`          | This property declare icon color of both icon(Arrow icon and Hamburger icon)                                    |
 | `itemContainerColor` | This property declare item background color and if it's be null default value is [Colors.white.withOpacity(.4)] |
+| `animationSpeed`     | This property declare animationspeed, default value is [500]                                                    |
+| `controller`         | This property declare controller, if you want to remotely trigger open/close functions. Defaults to [null]      |
 
 
 
@@ -26,6 +28,10 @@ Usage
 ```dart
 import 'package:expandable_menu/expandable_menu.dart';
 import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -53,8 +59,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late ExpandableMenuController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = ExpandableMenuController();
+  }
+
   @override
   Widget build(BuildContext context) {
+    var test = Directionality.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFF9FB373),
       body: ListView(
@@ -78,6 +94,28 @@ class _MyHomePageState extends State<MyHomePage> {
                             Radius.circular(16.0),
                           ),
                         ),
+                        child:
+                        Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            TextButton(
+                                onPressed: () {
+                                  controller.open();
+                                },
+                                child: const Text("Open menu")),
+                            TextButton(
+                                onPressed: () {
+                                  controller.close();
+                                },
+                                child: const Text("Close menu")),
+
+                            TextButton(
+                                onPressed: () {
+                                  controller.toggle();
+                                },
+                                child: const Text("Toggle menu")),
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(
@@ -87,21 +125,26 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: ExpandableMenu(
                           width: 46.0,
                           height: 46.0,
+                          controller: controller,
                           items: [
                             Container(),
                             Container(),
-                            Container(),
-                            Container(),
-                            Container(),
-                            Container(),
-                            Container(),
-                            Container(),
+                            RawMaterialButton(
+                              onPressed: () {
+                                controller.close();
+                              },
+                              shape: const CircleBorder(),
+                              child: const Icon(
+                                Icons.arrow_right_alt,
+                              ),
+                            ),
                             Container(),
                             Container(),
                             Container(),
                             Container(),
                           ],
                         )),
+
                   ],
                 ),
               )),
@@ -212,7 +255,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
 
 ```
 
