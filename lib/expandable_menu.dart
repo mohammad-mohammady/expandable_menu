@@ -173,7 +173,9 @@ class ExpandableMenuState extends State<ExpandableMenu>
                     : _listWidth * _containerProgress,
                 height: widget.height,
                 child: Directionality(
-                  textDirection: Directionality.of(context),
+                  textDirection: Directionality.of(context) == TextDirection.rtl
+                      ? TextDirection.ltr
+                      : TextDirection.rtl,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: _listWidget,
