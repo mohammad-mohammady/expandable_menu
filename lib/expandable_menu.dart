@@ -1,9 +1,7 @@
 library expandable_menu;
 
 import 'dart:async';
-
 import 'package:flutter/material.dart';
-
 import 'expandable_icon.dart';
 
 /// This class is main class of [ExpandableMenu] widget.
@@ -30,21 +28,30 @@ class ExpandableMenu extends StatefulWidget {
   /// and if it's be null default value is [Colors.white.withOpacity(.4)]
   final Color? itemContainerColor;
 
+  /// This property sets the main animation speed
+  final int animationSpeed;
+
+  /// This property sets a controller to the widget
+  /// Makes it possible to eg close the menu by code
+  final ExpandableMenuController? controller;
+
   const ExpandableMenu({
-    Key? key,
+    super.key,
     this.width = 70.0,
     this.height = 70.0,
+    this.animationSpeed = 800,
     required this.items,
     this.backgroundColor = const Color(0xFF4B5042),
     this.iconColor = Colors.white,
     this.itemContainerColor,
-  }) : super(key: key);
+    this.controller
+  });
 
   @override
-  State<ExpandableMenu> createState() => _ExpandableMenuState();
+  State<ExpandableMenu> createState() => ExpandableMenuState();
 }
 
-class _ExpandableMenuState extends State<ExpandableMenu>
+class ExpandableMenuState extends State<ExpandableMenu>
     with TickerProviderStateMixin {
   /// This private property declare to width of widget.
   late double _width;
@@ -79,11 +86,20 @@ class _ExpandableMenuState extends State<ExpandableMenu>
   /// This private property declare list timer for build every 60 millisecond [buildContainer].
   Timer? _listTimer;
 
+  /// This private property is for controlling icons animation
+  final ExpandableIconController _iconController = ExpandableIconController();
+
   @override
   void initState() {
+    //Set state controller if set
+    if(widget.controller!=null)
+      {
+          widget.controller!.setControllerState(this, _iconController);
+      }
+
     _width = widget.width;
     _containerAnimationController = AnimationController(
-      duration: const Duration(milliseconds: 800),
+      duration: Duration(milliseconds: widget.animationSpeed),
       vsync: this,
     );
 
@@ -103,7 +119,7 @@ class _ExpandableMenuState extends State<ExpandableMenu>
 
     super.initState();
 
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       _width = _width + _spacerKey.currentContext!.size!.width;
       _listWidth = _width - widget.width;
       _listItemSize = itemSize();
@@ -145,6 +161,8 @@ class _ExpandableMenuState extends State<ExpandableMenu>
                 width: widget.width,
                 height: widget.height,
                 iconColor: widget.iconColor,
+                animationSpeed: widget.animationSpeed,
+                controller: _iconController,
                 onClicked: () {
                   onExpandableIconClicked();
                 },
@@ -220,4 +238,43 @@ class _ExpandableMenuState extends State<ExpandableMenu>
 
   /// This method will return size of item.
   double itemSize() => widget.height * .75;
+
+}
+
+/// Controller [ExpandableMenuController] makes it possible to toggle states
+class ExpandableMenuController
+{
+  ExpandableMenuState? _state;
+  ExpandableIconController? _stateIcon;
+
+  /// Sets states for the icon and menu to current controller
+  void setControllerState(ExpandableMenuState state, ExpandableIconController stateIcon)
+  {
+    _state = state;
+    _stateIcon = stateIcon;
+  }
+
+  /// Activate toggle if we are expand
+  void open()
+  {
+    if(_state!=null)
+      {
+        if(!_state!._isExpanded) _stateIcon?.toggle();
+      }
+  }
+
+  /// Activate toggle if we are not expand
+  void close()
+  {
+    if(_state!=null)
+    {
+      if(_state!._isExpanded) _stateIcon?.toggle();
+    }
+  }
+
+  /// Toggle between expand or not
+  void toggle()
+  {
+    _stateIcon?.toggle();
+  }
 }
